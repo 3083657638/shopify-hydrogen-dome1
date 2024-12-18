@@ -64,8 +64,12 @@ export default function Homepage() {
   const data = useLoaderData();
   return (
     <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
+      <FeaturedCollection collection={data.featuredCollection} />1
       <RecommendedProducts products={data.recommendedProducts} />
+      <div>
+        3
+        
+      </div>
     </div>
   );
 }
