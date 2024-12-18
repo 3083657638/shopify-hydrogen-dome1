@@ -15,9 +15,11 @@ export const meta = () => {
  */
 export async function loader(args) {
   // Start fetching non-critical data without blocking time to first byte
+  //开始获取非关键数据，不阻塞第一个字节
   const deferredData = loadDeferredData(args);
 
   // Await the critical data required to render initial state of the page
+  // 等待页面初始状态所需的关键数据
   const criticalData = await loadCriticalData(args);
 
   return defer({...deferredData, ...criticalData});
@@ -26,12 +28,14 @@ export async function loader(args) {
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
+ * 加载页面所需的数据，这是呈现页面所需的关键数据，如果不可用，整个页面应该返回400或500错误。
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({context}) {
   const [{collections}] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     // Add other queries here, so that they are loaded in parallel
+    // 这里加载其他查询，以便在并行加载
   ]);
 
   return {
@@ -43,6 +47,9 @@ async function loadCriticalData({context}) {
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
+ * 加载数据以呈现下面内容。
+ * 这些数据将被延迟，并在初始页面加载后被获取。如果不可用，页面应该仍然是 200
+ * 确认这里没有抛出任何错误，因为他会导致页面变成 500
  * @param {LoaderFunctionArgs}
  */
 function loadDeferredData({context}) {
@@ -50,6 +57,7 @@ function loadDeferredData({context}) {
     .query(RECOMMENDED_PRODUCTS_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
+      // 记录并查询错误，但不要抛出，这样保证页面仍然可以呈现
       console.error(error);
       return null;
     });
