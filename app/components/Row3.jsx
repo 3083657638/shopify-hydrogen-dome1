@@ -1,47 +1,89 @@
-import React from 'react';
-import {defer} from '@shopify/remix-oxygen';
-import {Await,useLoaderData,Link} from '@remix-run/react';
-import {Suspense} from 'react';
+import React,{ useState } from 'react';
 
-/**
- * 
- * @param{LoaderFunctionArgs} args
- */
-export async function loader(args){
-    const deferredData = loadDeferredData(args);
+export default function Row3() {
+  //静态数据
+  const staticData = [
+    { id: 1, content: 'Slide 1 Content' },
+    { id: 2, content: 'Slide 2 C2t1nt' },
+    { id: 3, content: 'Slide 3 C2t3nt' },
+    { id: 4, content: 'Slide 4 C24nt' },
+    { id: 5, content: 'Slide 5 C2t5nt' },
+    { id: 6, content: 'Slide 6 C2t6nt' },
+    { id: 7, content: 'Product 7' },
+    { id: 8, content: 'Product 8' },
+    { id: 9, content: 'Product 9' },
+    { id: 10, content: 'Product 10' },
+  ];
+  const [currentIndex,setCurrentIndex] = useState(0);
 
-    const criticalData = await loadCriticalData(args);
+const nextSlide=()=>{
+  setCurrentIndex((prevIndex) => (prevIndex + 1) % staticData.length);
+};
 
-    return defer({...deferredData, ...criticalData});
-}
+const prevSlide = () => {
+  setCurrentIndex((prevIndex)=>
+  prevIndex === 0 ? staticData.length - 1 : prevIndex - 1
+);
+};
 
-/**
- * @param {loadDeferredData}
- */
-async function loadCriticalData({context}){
-    const [{collections}] = await Promise.all([
-        context.storefront.query(FEATURED_COLLECTION_QUERY),
-    ])
+   return (
+    // <div style={{ textAlign: 'center', margin: '20px' }}>
+    //   <h2>Carousel Component</h2>
+    //   <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
+    //     <h3>{staticData[currentIndex].content}</h3>
+    //   </div>
+    //   <div style={{ marginTop: '10px' }}>
+    //     <button onClick={prevSlide} style={{ marginRight: '10px' }}>
+    //       Previous
+    //     </button>
+    //     <button onClick={nextSlide}>Next</button>
+    //   </div>
+    // </div>
+    <div style={{ textAlign:'center',margin:'20px'}}>
+      <h2>Carousel Component</h2>
+      <div 
+        style={{ 
+          display:'flex',
+          overflow:'hidden',
+          width:'80%',
+          margin:'0 auto',
+          border:'1px solid #ccc',
+          borderRadius:'5px',
+        }}
+      >
+        <div 
+          style={{ 
+            display:'flex',
+            transform:`translateX(-${currentIndex *(100/4)}%)`,
+            transition:'transform 0.5s ease-in-out',
+            width:`${(staticData.length/4)*100}%`,
+          }}
+        >
+          {staticData.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                flex: '0 0 25%', // 每个产品占 25%
+                boxSizing: 'border-box',
+                padding: '10px',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '5px' }}>
+                {item.content}
+              </div>
+            </div>
+          ))}
 
-    return {
-        featuredCollection:collections.nodes[0],
-    }
-}
-
-const NewSection3 = ()=>{
-    return(
-        <div>
-            第三块
         </div>
 
-    )
+      </div>
+      <div style={{ marginTop:'10px'  }}>
+        <button onClick={prevSlide} style={{ marginRight:'10px' }}>
+          previous
+        </button>
+        <button onClick={nextSlide}> Next</button>
+      </div>
+    </div>
+  );
 }
-
-export default NewSection3;
-
-const FEATURED_COLLECTION_QUERY= `#graphal
-    fragment NewSection3 on Product {
-       id
-       title
-
-    }`;

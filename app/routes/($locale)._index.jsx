@@ -2,7 +2,7 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
-import NewSection3 from '~/components/Row3';
+import NewSection3 from '../components/Row3';
 /**
  * @type {MetaFunction}
  */
@@ -11,6 +11,7 @@ export const meta = () => {
 };
 
 /**
+ *  数据加载器 (loader 函数)
  * @param {LoaderFunctionArgs} args
  */
 export async function loader(args) {
@@ -26,6 +27,7 @@ export async function loader(args) {
 }
 
 /**
+ * 关键数据加载 (loadCriticalData 函数)
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  * 加载页面所需的数据，这是呈现页面所需的关键数据，如果不可用，整个页面应该返回400或500错误。
@@ -44,6 +46,7 @@ async function loadCriticalData({context}) {
 }
 
 /**
+ * 非关键数据加载 (loadDeferredData 函数)
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
